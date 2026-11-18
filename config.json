@@ -9,7 +9,7 @@
 
   "steam": {
     "_help": "App IDs that are tools, not games (redistributables, SteamVR, Proton, Wallpaper Engine).",
-    "hideAppIds": [228980, 250820, 431960, 1070560, 1391110, 1628350, 1493710]
+    "hideAppIds": [228980, 250820, 431960, 1070560, 1391110, 1628350, 1493710, 1836200, 202390, 564310]
   },
 
   "launchers": [
