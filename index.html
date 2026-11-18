@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Game Library</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='8' width='28' height='16' rx='8' fill='%23c25e17'/%3E%3Ccircle cx='22' cy='14' r='2' fill='%23fff'/%3E%3Ccircle cx='25' cy='18' r='2' fill='%23fff'/%3E%3Cpath d='M9 12v8M5 16h8' stroke='%23fff' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #f4f4f1; --panel: #ffffff; --text: #1c1c1e; --muted: #67676d; --faint: #9a9aa0;
+  --line: #e3e3de; --chip: #eaeae6; --chip-on: #1c1c1e; --chip-on-text: #ffffff; --focus: #2f6fde;
+  --steam: #1f6fbf; --epic: #3d3d42; --gog: #8b3fc6; --battlenet: #0a73d9; --ubisoft: #3253c9;
+  --ea: #d23c3c; --xbox: #16801a; --turiya: #c25e17; --other: #67676d; --ok: #1d7f3a;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111113; --panel: #1a1a1d; --text: #ececef; --muted: #a2a2aa; --faint: #6e6e76;
+    --line: #2a2a2f; --chip: #242428; --chip-on: #ececef; --chip-on-text: #111113; --focus: #6ea0ff;
+    --steam: #5aa9f0; --epic: #c9c9cf; --gog: #b98ae6; --battlenet: #4da6ff; --ubisoft: #8197f0;
+    --ea: #f07a7a; --xbox: #5cc260; --turiya: #f0954f; --other: #a2a2aa; --ok: #5cc27a;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--text); font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-text-size-adjust: 100%; }
+[hidden] { display: none !important; }
+.wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+
+header { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-top: 14px; }
+h1 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
+.meta { color: var(--muted); font-size: 13px; text-align: right; }
+.search { margin: 10px 0 8px; }
+.search input { width: 100%; font: inherit; font-size: 16px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); color: var(--text); }
+.search input:focus { outline: 2px solid var(--focus); outline-offset: -1px; border-color: transparent; }
+.filters { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+.filters::-webkit-scrollbar { display: none; }
+.chip { flex: none; font: inherit; font-size: 13px; border: 0; border-radius: 999px; padding: 6px 11px; background: var(--chip); color: var(--text); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.chip:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--other)); }
+.chip .n { color: var(--muted); font-variant-numeric: tabular-nums; }
+.chip[aria-pressed="true"] { background: var(--chip-on); color: var(--chip-on-text); }
+.chip[aria-pressed="true"] .n { color: inherit; opacity: 0.7; }
+select.chip { appearance: none; -webkit-appearance: none; padding-right: 28px; background: var(--chip) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23888' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 11px center / 10px; }
+select.chip.on { background-color: var(--chip-on); color: var(--chip-on-text); }
+.sep { flex: none; width: 1px; background: var(--line); margin: 4px 2px; }
+
+main { padding: 10px 0 48px; }
+.count { color: var(--muted); font-size: 13px; padding: 2px 2px 8px; font-variant-numeric: tabular-nums; }
+ul.list { list-style: none; margin: 0; padding: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+li.game { display: grid; grid-template-columns: 104px 1fr; gap: 12px; padding: 10px 12px; border-top: 1px solid var(--line); cursor: pointer; content-visibility: auto; contain-intrinsic-size: auto 70px; }
+li.game:first-child { border-top: 0; }
+li.game:hover { background: color-mix(in srgb, var(--chip) 45%, transparent); }
+.thumb { width: 104px; height: 49px; border-radius: 6px; overflow: hidden; background: var(--chip); display: grid; place-items: center; color: var(--muted); font-size: 11px; font-weight: 650; letter-spacing: 0.03em; text-transform: uppercase; text-align: center; line-height: 1.1; padding: 2px; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.body { min-width: 0; }
+.title { font-weight: 600; overflow-wrap: anywhere; }
+.copies { display: flex; flex-wrap: wrap; gap: 3px 12px; margin-top: 3px; font-size: 12.5px; color: var(--muted); }
+.copy { display: inline-flex; align-items: center; gap: 5px; }
+.copy::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c); flex: none; }
+.copy b { font-weight: 600; color: var(--text); }
+.copy .inst { color: var(--ok); }
+.details { margin-top: 8px; display: grid; gap: 6px; font-size: 12.5px; }
+.drow { display: grid; gap: 1px; }
+.dlabel { color: var(--muted); }
+.path { font: 12px/1.35 ui-monospace, "Cascadia Mono", Consolas, monospace; word-break: break-all; text-align: left; color: var(--text); background: var(--chip); border: 0; border-radius: 6px; padding: 5px 8px; cursor: copy; width: fit-content; max-width: 100%; }
+.path:focus-visible { outline: 2px solid var(--focus); }
+.details a { color: var(--focus); text-decoration: none; width: fit-content; }
+.details a:hover { text-decoration: underline; }
+.empty { padding: 40px 16px; text-align: center; color: var(--muted); }
+footer { margin-top: 18px; color: var(--muted); font-size: 12.5px; display: grid; gap: 3px; }
+footer .warn { color: var(--turiya); }
+.toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%) translateY(20px); background: var(--chip-on); color: var(--chip-on-text); padding: 8px 14px; border-radius: 999px; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .15s, transform .15s; }
+.toast.show { opacity: 1; transform: translateX(-50%); }
+@media (max-width: 560px) {
+  li.game { grid-template-columns: 72px 1fr; gap: 10px; padding: 10px; }
+  .thumb { width: 72px; height: 34px; font-size: 10px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <h1>Game Library</h1>
+      <div class="meta" id="meta">Loading…</div>
+    </div>
+    <div class="search"><input id="q" type="search" placeholder="Search titles  ( / )" autocomplete="off" spellcheck="false" aria-label="Search titles"></div>
+    <div class="filters" id="filters" role="toolbar" aria-label="Filters"></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="count" id="count"></div>
+  <ul class="list" id="list"></ul>
+  <div class="empty" id="empty" hidden>No games match.</div>
+  <footer id="footer"></footer>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  const STORE_VARS = ['steam', 'epic', 'gog', 'battlenet', 'ubisoft', 'ea', 'xbox', 'turiya'];
+  const storeColor = s => {
+    const k = String(s).toLowerCase().replace(/[^a-z0-9]/g, '');
+    return STORE_VARS.includes(k) ? `var(--${k})` : 'var(--other)';
+  };
+  const norm = s => String(s).normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+  const sortKey = s => norm(s).replace(/^(the|a) /, '');
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const $ = id => document.getElementById(id);
+
+  const state = { q: '', stores: new Set(), platform: '', installed: false, multi: false };
+  let items = [];
+
+  function readHash() {
+    const p = new URLSearchParams(location.hash.slice(1));
+    state.q = p.get('q') || '';
+    state.stores = new Set((p.get('s') || '').split(',').filter(Boolean));
+    state.platform = p.get('p') || '';
+    state.installed = p.get('i') === '1';
+    state.multi = p.get('m') === '1';
+  }
+  function writeHash() {
+    const p = new URLSearchParams();
+    if (state.q) p.set('q', state.q);
+    if (state.stores.size) p.set('s', [...state.stores].join(','));
+    if (state.platform) p.set('p', state.platform);
+    if (state.installed) p.set('i', '1');
+    if (state.multi) p.set('m', '1');
+    const h = p.toString();
+    history.replaceState(null, '', h ? '#' + h : location.pathname + location.search);
+  }
+
+  function copyLabel(c) {
+    const parts = [];
+    if (c.platform && c.platform !== 'PC') parts.push(c.platform);
+    if (c.where) parts.push(c.where);
+    if (c.hours) parts.push(`${c.hours} h`);
+    return parts.join(' · ');
+  }
+
+  function thumbText(g) {
+    const c = g.copies.find(c => c.platform && c.platform !== 'PC') || g.copies[0];
+    return c ? (c.platform || c.store) : '';
+  }
+
+  function buildRow(g, i) {
+    const li = el('li', 'game');
+    li.dataset.i = i;
+    const th = el('div', 'thumb');
+    if (g.img) {
+      const im = new Image();
+      im.loading = 'lazy';
+      im.decoding = 'async';
+      im.alt = '';
+      im.referrerPolicy = 'no-referrer';
+      im.onerror = () => { im.remove(); th.textContent = thumbText(g); };
+      im.src = g.img;
+      th.append(im);
+    } else {
+      th.textContent = thumbText(g);
+    }
+    const body = el('div', 'body');
+    body.append(el('div', 'title', g.title));
+    const copies = el('div', 'copies');
+    for (const c of g.copies) {
+      const s = el('span', 'copy');
+      s.style.setProperty('--c', storeColor(c.store));
+      s.append(el('b', null, c.store));
+      const rest = copyLabel(c);
+      if (rest) s.append(' ' + rest);
+      if (c.installed) s.append(' ', el('span', 'inst', 'installed'));
+      copies.append(s);
+    }
+    body.append(copies);
+    li.append(th, body);
+    return li;
+  }
+
+  function buildDetails(g) {
+    const d = el('div', 'details');
+    for (const c of g.copies) {
+      const row = el('div', 'drow');
+      const label = [c.store, copyLabel(c)].filter(Boolean).join(' · ');
+      const loc = typeof c.installed === 'string' ? c.installed : c.path;
+      row.append(el('span', 'dlabel', label + (c.installed ? ' · installed' : (c.path ? '' : ' · in library, not installed'))));
+      if (loc) {
+        const b = el('button', 'path', loc);
+        b.type = 'button';
+        b.title = 'Copy path';
+        b.dataset.copy = loc;
+        row.append(b);
+      }
+      if (c.note) row.append(el('span', 'dlabel', c.note));
+      d.append(row);
+    }
+    if (g.steam) {
+      const a = el('a', null, 'Steam store page ↗');
+      a.href = `https://store.steampowered.com/app/${g.steam}`;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      d.append(a);
+    }
+    return d;
+  }
+
+  function chip(label, { count, color, pressed, onClick, title }) {
+    const b = el('button', 'chip');
+    b.type = 'button';
+    if (title) b.title = title;
+    if (color) { const dot = el('span', 'dot'); dot.style.setProperty('--c', color); b.append(dot); }
+    b.append(label);
+    if (count != null) b.append(el('span', 'n', count.toLocaleString()));
+    b.setAttribute('aria-pressed', String(!!pressed));
+    b.addEventListener('click', onClick);
+    return b;
+  }
+
+  function renderFilters(games) {
+    const f = $('filters');
+    f.replaceChildren();
+
+    const storeCounts = new Map();
+    const platCounts = new Map();
+    for (const g of games) {
+      for (const s of new Set(g.copies.map(c => c.store))) storeCounts.set(s, (storeCounts.get(s) || 0) + 1);
+      for (const p of new Set(g.copies.map(c => c.platform || 'PC'))) platCounts.set(p, (platCounts.get(p) || 0) + 1);
+    }
+
+    f.append(chip('All', {
+      pressed: !state.stores.size,
+      onClick: () => { state.stores.clear(); update(); }
+    }));
+    for (const [s, n] of [...storeCounts].sort((a, b) => b[1] - a[1])) {
+      f.append(chip(s, {
+        count: n, color: storeColor(s), pressed: state.stores.has(s),
+        onClick: () => { state.stores.has(s) ? state.stores.delete(s) : state.stores.add(s); update(); }
+      }));
+    }
+    f.append(el('span', 'sep'));
+
+    const sel = el('select', 'chip' + (state.platform ? ' on' : ''));
+    sel.setAttribute('aria-label', 'Platform');
+    sel.append(new Option('All platforms', ''));
+    const plats = [...platCounts].sort((a, b) => (a[0] === 'PC' ? -1 : b[0] === 'PC' ? 1 : b[1] - a[1]));
+    for (const [p, n] of plats) sel.append(new Option(`${p}  (${n.toLocaleString()})`, p));
+    sel.value = state.platform;
+    sel.addEventListener('change', () => { state.platform = sel.value; update(); });
+    f.append(sel);
+
+    f.append(chip('Installed', {
+      pressed: state.installed, title: 'Installed on this PC',
+      onClick: () => { state.installed = !state.installed; update(); }
+    }));
+    f.append(chip('2+ copies', {
+      pressed: state.multi, title: 'Games you have in more than one place',
+      onClick: () => { state.multi = !state.multi; update(); }
+    }));
+  }
+
+  let allGames = [];
+  function update() {
+    renderFilters(allGames);
+    apply();
+  }
+
+  function apply() {
+    const words = norm(state.q).split(' ').filter(Boolean);
+    const copyFilter = state.stores.size || state.platform || state.installed;
+    let shown = 0;
+    for (const it of items) {
+      let ok = words.every(w => it.n.includes(w));
+      if (ok && copyFilter) {
+        ok = it.g.copies.some(c =>
+          (!state.stores.size || state.stores.has(c.store)) &&
+          (!state.platform || (c.platform || 'PC') === state.platform) &&
+          (!state.installed || c.installed));
+      }
+      if (ok && state.multi) ok = it.g.copies.length > 1;
+      it.el.hidden = !ok;
+      if (ok) shown++;
+    }
+    $('count').textContent = shown === items.length
+      ? `${items.length.toLocaleString()} games`
+      : `${shown.toLocaleString()} of ${items.length.toLocaleString()} games`;
+    $('empty').hidden = shown > 0;
+    $('list').hidden = shown === 0;
+    writeHash();
+  }
+
+  function renderFooter(data) {
+    const f = $('footer');
+    for (const s of data.sources || []) {
+      const line = el('div', s.note ? 'warn' : null, `${s.name}: ${Number(s.count).toLocaleString()}${s.note ? ' — ' + s.note : ''}`);
+      f.append(line);
+    }
+  }
+
+  let toastTimer;
+  function toast(msg) {
+    const t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 1400);
+  }
+
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); toast('Path copied'); }
+    catch { toast('Copy not available here'); }
+  }
+
+  async function init() {
+    readHash();
+    let data;
+    try {
+      const r = await fetch('games.json', { cache: 'no-cache' });
+      if (!r.ok) throw new Error(r.status);
+      data = await r.json();
+    } catch (e) {
+      $('meta').textContent = '';
+      $('count').textContent = "Couldn't load games.json.";
+      return;
+    }
+    allGames = (data.games || []).filter(g => g && g.title && Array.isArray(g.copies));
+    allGames.sort((a, b) => sortKey(a.title).localeCompare(sortKey(b.title)));
+
+    const when = data.generated ? new Date(data.generated) : null;
+    $('meta').textContent = when && !isNaN(when)
+      ? `Scanned ${when.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}`
+      : '';
+
+    const list = $('list');
+    const frag = document.createDocumentFragment();
+    items = allGames.map((g, i) => {
+      const li = buildRow(g, i);
+      frag.append(li);
+      return { g, el: li, n: ' ' + norm(g.title) + ' ' };
+    });
+    list.append(frag);
+
+    list.addEventListener('click', e => {
+      const btn = e.target.closest('button.path');
+      if (btn) { copyText(btn.dataset.copy); return; }
+      if (e.target.closest('a')) return;
+      const li = e.target.closest('li.game');
+      if (!li) return;
+      const body = li.querySelector('.body');
+      const open = body.querySelector('.details');
+      if (open) open.remove();
+      else body.append(buildDetails(allGames[li.dataset.i]));
+    });
+
+    const q = $('q');
+    q.value = state.q;
+    q.addEventListener('input', () => { state.q = q.value; apply(); });
+    q.addEventListener('keydown', e => { if (e.key === 'Escape') { q.value = ''; state.q = ''; apply(); } });
+    document.addEventListener('keydown', e => {
+      if (e.key === '/' && document.activeElement !== q) { e.preventDefault(); q.focus(); q.select(); }
+    });
+
+    window.addEventListener('hashchange', () => { readHash(); q.value = state.q; update(); });
+
+    renderFooter(data);
+    update();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

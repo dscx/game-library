@@ -1,0 +1,4 @@
+{
+  "_help": "Games the scanner can't find (GOG, Ubisoft, EA, Xbox, discs, old installers). Fields: title (required), store, platform (default PC), where, path, installed, note.",
+  "games": []
+}

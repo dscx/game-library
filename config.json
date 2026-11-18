@@ -1,0 +1,46 @@
+{
+  "_help": "Settings for scan.ps1. Secrets (steamApiKey) go in config.local.json, which is never committed.",
+
+  "hideTitles": [
+    "World of Warcraft",
+    "Galactic Civilizations III (Test branch)",
+    "Death Stranding Content"
+  ],
+
+  "steam": {
+    "_help": "App IDs that are tools, not games (redistributables, SteamVR, Proton, Wallpaper Engine).",
+    "hideAppIds": [228980, 250820, 431960, 1070560, 1391110, 1628350, 1493710]
+  },
+
+  "launchers": [
+    { "store": "Battle.net", "publisher": "Blizzard Entertainment" },
+    { "store": "Ubisoft",    "publisher": "Ubisoft" },
+    { "store": "EA",         "publisher": "Electronic Arts" }
+  ],
+  "launcherSkip": ["Battle.net", "Ubisoft Connect", "EA app"],
+
+  "nas": [
+    { "store": "Turiya", "where": "Repack", "type": "folders", "platform": "PC",
+      "path": "\\\\Turiya\\aum\\Games\\Repacks" },
+    { "store": "Turiya", "where": "Backup", "type": "folders", "platform": "PC",
+      "path": "\\\\Turiya\\aum\\Games\\Roms\\PC" },
+    { "store": "Turiya", "where": "ROM", "type": "roms",
+      "path": "\\\\Turiya\\aum\\Games\\Roms",
+      "skipFolders": ["PC", "masters", "originals_backup", "SORT MASTER", "NDSGBA_for_DSTWO_v1"] }
+  ],
+
+  "skipNames": ["_from-Backups", "media", "png", "images", "@eaDir", "#recycle"],
+  "skipExtensions": [".png", ".jpg", ".jpeg", ".txt", ".nfo", ".xml", ".cfg", ".ini", ".dat",
+                     ".sav", ".srm", ".state", ".m3u", ".db", ".opk"],
+  "stripPatterns": ["\\s*\\[[^\\]]*\\]", "\\s*GnarlyRepacks$"],
+
+  "romPlatforms": {
+    "3DS": "3DS", "DS": "DS", "Nintendo DS": "DS", "Dreamcast": "Dreamcast",
+    "Game Boy": "Game Boy", "Game Boy Advance": "GBA", "Game Gear": "Game Gear",
+    "GC": "GameCube", "MAME": "Arcade", "N64": "N64", "NEOGEO": "Neo Geo", "NES": "NES",
+    "PC Engine": "PC Engine", "pico8": "PICO-8", "PS2": "PS2", "PS3": "PS3", "psp": "PSP",
+    "PSX": "PS1", "Sega Genesis": "Genesis", "SNES": "SNES", "switch": "Switch",
+    "Wii": "Wii", "Wii U": "Wii U", "xbox": "Xbox"
+  },
+  "romStripLeadingNumbers": ["MAME", "DS"]
+}
